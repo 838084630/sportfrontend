@@ -7,7 +7,7 @@
                     <span>个人运动平台</span>
                 </div>
 
-                <el-button type="info" @click="logout">安全退出</el-button></el-header>
+                <el-button type="info" @click="logout"">安全退出</el-button></el-header>
             <!--主体-->
             <el-container class="home-container">
                 <!--侧边栏-->
@@ -19,7 +19,8 @@
                             active-text-color="#ffd04b"
                             unique-opened :collapse="isCollapse"
                             :collapse-transition="false"
-                            :router="true">
+                            :router="true"
+                            :default-active="activePath">
                         <!--一级菜单-->
                         <el-submenu :index="item.id+''" v-for="item in menuList" :key="item.id">
                             <template slot="title">
@@ -27,7 +28,7 @@
                                 <span>{{item.title}}</span>
                             </template>
                         <!--二级菜单-->
-                            <el-menu-item :index="it.path" v-for="it in item.sList" :key="it.id">
+                            <el-menu-item :index="it.path" v-for="it in item.sList" :key="it.id" @click="saveNavState(it.path)">
                                 <template slot="title">
                                     <i :class="iconsObject[it.id]"></i>
                                     <span>{{it.title}}</span>
@@ -51,6 +52,7 @@
         name: "Home",
         created(){
             this.getMenuList();
+            this.activePath = window.sessionStorage.getItem('activePath')
         },
 
         data(){
@@ -66,7 +68,8 @@
                     '104':'el-icon-s-platform',
                     '201':'el-icon-s-marketing',
                     '202':'el-icon-s-opportunity',
-                }
+                },
+                activePath:'/welcome',
             }
         },
         methods:{
@@ -83,6 +86,10 @@
             },
             toggleCollapse(){
                 this.isCollapse = !this.isCollapse
+            },
+            saveNavState(activePath){
+                window.sessionStorage.setItem('activePath',activePath);
+                this.activePath = activePath;
             }
         }
     }
@@ -99,6 +106,7 @@
         padding-left: 0%;//左边界
         color: #ffff;
         font-size: 20px;
+        align-items: center;
         >div{
             display: flex;
             align-items: center;
